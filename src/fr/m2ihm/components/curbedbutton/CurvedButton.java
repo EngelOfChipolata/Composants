@@ -5,7 +5,9 @@
  */
 package fr.m2ihm.components.curbedbutton;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Label;
@@ -23,24 +25,21 @@ import javax.swing.JLabel;
  *
  * @author buisangu
  */
-public class CurbedButton  extends JComponent{
-    
-    private JLabel label;
-    private Color color;
+public class CurvedButton  extends JComponent{
+        private Color color;
     private PropertyChangeSupport support;
     private double fillProportion;
     private double startAngle;
     private double openAngle;
     
     
-    public CurbedButton(){
-        this("default", Color.PINK, 0.5, 0, 180);
+    public CurvedButton(){
+        this(Color.PINK, 0.5, 0, 180);
     }
     
-    public CurbedButton(String text, Color color, double fillProportion, double startAngle, double endAngle){
+    public CurvedButton(Color color, double fillProportion, double startAngle, double endAngle){
         super();
         this.support = new PropertyChangeSupport(this);
-        this.label = new JLabel(text);
         this.color = color;
         this.fillProportion = fillProportion;
         this.startAngle = startAngle;
@@ -60,8 +59,7 @@ public class CurbedButton  extends JComponent{
     }
 
     public void setFillProportion(double fillProportion) {
-        this.fillProportion = fillProportion;
-        //this.fillProportion = Math.max(0, Math.min(1, fillProportion));
+        this.fillProportion = Math.max(0, Math.min(1, fillProportion));
     }
 
     public double getStartAngle() {
@@ -69,7 +67,8 @@ public class CurbedButton  extends JComponent{
     }
 
     public void setStartAngle(double startAngle) {
-        this.startAngle = startAngle;
+        double angle = Math.min(360, Math.max(0, openAngle));
+        this.startAngle = angle;
     }
 
     public double getOpenAngle() {
@@ -77,7 +76,8 @@ public class CurbedButton  extends JComponent{
     }
 
     public void setOpenAngle(double openAngle) {
-        this.openAngle = openAngle;
+        double angle = Math.min(360, Math.max(0, openAngle));
+        this.openAngle = angle;
     }
     
     public void addPropertyChangeListener(PropertyChangeListener li){
@@ -94,7 +94,6 @@ public class CurbedButton  extends JComponent{
         Graphics2D g2 = (Graphics2D) g;
         
         Color oldColor = g.getColor();
-        g2.setColor(getColor());
         Area quarterCircle = new Area(new Arc2D.Double(0, 0, getWidth(), getHeight(), startAngle, openAngle, Arc2D.PIE));
         Area center = new Area(new Ellipse2D.Double(getWidth() / 2 - getWidth() / 2 * fillProportion, 
                 getHeight() / 2 - getHeight() / 2 * fillProportion, 
@@ -103,25 +102,35 @@ public class CurbedButton  extends JComponent{
         
         quarterCircle.subtract(center);
         
+        g2.setColor(getColor());
         g2.fill(quarterCircle);
+        
+        g2.setColor(Color.BLACK);
+        g2.setStroke(new BasicStroke(5));
+        g2.draw(quarterCircle);
         
         g2.setColor(oldColor);
     }
 
     @Override
     public boolean contains(int x, int y) {
-        double internalA = getWidth() * fillProportion / 2;
-        double internalB = getHeight() * fillProportion / 2;
-        double angle = Math.atan2(y, x) * 180 / Math.PI;
+        double a2 = Math.pow(this.getWidth()/2, 2);
+        double b2 = Math.pow(this.getHeight()/2, 2);
+        double bigEllipse = Math.pow(x - this.getWidth()/2, 2) / a2 + Math.pow(y - this.getHeight()/2, 2) / b2;
+        double internalA2 = Math.pow(this.getWidth() * fillProportion / 2, 2);
+        double internalB2 = Math.pow(this.getHeight() * fillProportion / 2, 2);
+        double internalEllipse = Math.pow(x - this.getWidth()/2, 2) / internalA2 + Math.pow(y - this.getHeight()/2, 2) / internalB2;
+        double angle = (Math.atan2(-y + this.getHeight() / 2, x - this.getWidth() / 2) * 180 / Math.PI + 360) % 360;
         
-        System.out.println((Math.pow(x / getWidth() / 2 - 1, 2) + Math.pow(y / getHeight() / 2 - 1, 2) <= 1) +" : " +
-                (Math.pow((x - getWidth()) / internalA, 2) + Math.pow((y - getHeight()) / internalB, 2) > 1) + " : " +
-                (angle >= startAngle) + " : " + (angle <= startAngle + openAngle));
-        
-        return ((Math.pow(x / getWidth() / 2 - 1, 2) + Math.pow(y / getHeight() / 2 - 1, 2) <= 1)
-                && (Math.pow((x - getWidth()) / internalA, 2) + Math.pow((y - getHeight()) / internalB, 2) > 1)
+        return ((bigEllipse <= 1)
+                && (internalEllipse > 1)
                 && angle >= startAngle
-                && angle <= startAngle + openAngle);
+                && angle <= (startAngle + openAngle) % 360);
+    }
+    
+        @Override
+    public Dimension getPreferredSize() {
+        return new Dimension(150, 150);
     }
     
     

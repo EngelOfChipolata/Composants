@@ -5,6 +5,17 @@
  */
 package fr.m2ihm.components;
 
+import fr.m2ihm.components.popuppiemenu.PopUpPieMenu;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import javax.swing.Popup;
+import javax.swing.PopupFactory;
+
 /**
  *
  * @author buisangu
@@ -14,8 +25,33 @@ public class TestFrame extends javax.swing.JFrame {
     /**
      * Creates new form TestFrame
      */
+    Popup newPopup;
+
     public TestFrame() {
         initComponents();
+
+        MouseListener popupListener = new PopupListener();
+        addMouseListener(popupListener);
+    }
+
+    class PopupListener extends MouseAdapter {
+
+        public void mousePressed(MouseEvent e) {
+            maybeShowPopup(e);
+        }
+
+        public void mouseReleased(MouseEvent e) {
+            maybeShowPopup(e);
+        }
+
+        private void maybeShowPopup(MouseEvent e) {
+            if (newPopup != null) {
+                newPopup.hide();
+            }
+            PopUpPieMenu p = new PopUpPieMenu();
+            newPopup = PopupFactory.getSharedInstance().getPopup(e.getComponent(), p, e.getX() - p.getWidth() / 2, e.getY() - p.getHeight() / 2);
+            newPopup.show();
+        }
     }
 
     /**
@@ -27,7 +63,7 @@ public class TestFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        curbedButton1 = new fr.m2ihm.components.curbedbutton.CurbedButton();
+        curvedButtonText1 = new fr.m2ihm.components.curbedbuttontext.CurvedButtonText();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addMouseListener(new java.awt.event.MouseAdapter() {
@@ -36,27 +72,21 @@ public class TestFrame extends javax.swing.JFrame {
             }
         });
 
-        curbedButton1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                curbedButton1MouseClicked(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(122, 122, 122)
-                .addComponent(curbedButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(497, Short.MAX_VALUE))
+                .addGap(298, 298, 298)
+                .addComponent(curvedButtonText1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(3429, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(78, 78, 78)
-                .addComponent(curbedButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(122, Short.MAX_VALUE))
+                .addGap(240, 240, 240)
+                .addComponent(curvedButtonText1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(418, Short.MAX_VALUE))
         );
 
         pack();
@@ -65,10 +95,6 @@ public class TestFrame extends javax.swing.JFrame {
     private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
         // TODO add your handling code here:
     }//GEN-LAST:event_formMouseClicked
-
-    private void curbedButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_curbedButton1MouseClicked
-        System.out.println("Plop");
-    }//GEN-LAST:event_curbedButton1MouseClicked
 
     /**
      * @param args the command line arguments
@@ -103,9 +129,10 @@ public class TestFrame extends javax.swing.JFrame {
                 new TestFrame().setVisible(true);
             }
         });
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private fr.m2ihm.components.curbedbutton.CurbedButton curbedButton1;
+    private fr.m2ihm.components.curbedbuttontext.CurvedButtonText curvedButtonText1;
     // End of variables declaration//GEN-END:variables
 }

@@ -27,31 +27,24 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" pref="122" max="-2" attributes="0"/>
-              <Component id="curbedButton1" min="-2" pref="100" max="-2" attributes="0"/>
-              <EmptySpace pref="497" max="32767" attributes="0"/>
+              <EmptySpace min="-2" pref="298" max="-2" attributes="0"/>
+              <Component id="curvedButtonText1" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="3429" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" pref="78" max="-2" attributes="0"/>
-              <Component id="curbedButton1" min="-2" pref="100" max="-2" attributes="0"/>
-              <EmptySpace pref="122" max="32767" attributes="0"/>
+              <EmptySpace min="-2" pref="240" max="-2" attributes="0"/>
+              <Component id="curvedButtonText1" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="418" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Container class="fr.m2ihm.components.curbedbutton.CurbedButton" name="curbedButton1">
-      <Events>
-        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="curbedButton1MouseClicked"/>
-      </Events>
-
-      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout">
-        <Property name="useNullLayout" type="boolean" value="true"/>
-      </Layout>
-    </Container>
+    <Component class="fr.m2ihm.components.curbedbuttontext.CurvedButtonText" name="curvedButtonText1">
+    </Component>
   </SubComponents>
 </Form>
