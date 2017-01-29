@@ -6,73 +6,46 @@
 package fr.m2ihm.components.popuppiemenu;
 
 import fr.m2ihm.components.curbedbutton.CurvedButton;
-import fr.m2ihm.components.curbedbuttontext.CurvedButtonText;
+import fr.m2ihm.components.curbedbuttontext.PieMenuItem;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.MenuItem;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.JLayeredPane;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 
 /**
  *
  * @author buisangu
  */
 public class PopUpPieMenu extends JLayeredPane{
-    private List<CurvedButtonText> buttons;
+    List<PieMenuItem> items;
     
     public PopUpPieMenu(){
-        this(new String[]{"1","2", "3"}, 0.5);
+        items = new ArrayList<>();
     }
-    
-    public PopUpPieMenu(String[] names, double fillProportion){
-        buttons = new ArrayList<>();
-        CurvedButtonText curvedButton;
-        double incrementalAngle = 360/names.length;
-        for (int i=0; i<names.length; i++){
-            curvedButton = new CurvedButtonText(names[i], Color.yellow, fillProportion, i*incrementalAngle, (i+1)*incrementalAngle);
-            buttons.add(curvedButton);
-            this.add(curvedButton, PALETTE_LAYER);
+
+    public void add(PieMenuItem item){
+        if (items.size() >= 8){
+            throw new RuntimeException("Cannot Make PieMenu with more than 8 items.");
         }
-        setLayout(null);
-    }
-    
-    public String[] getItems(){
-        String[] itemsLabel = new String[buttons.size()];
-        for (int i=0; i<buttons.size(); i++){
-            itemsLabel[i] = buttons.get(i).getText();
+        items.add(item);
+        this.add(item, DEFAULT_LAYER);
+        for (int i=0; i<items.size(); i++){
+            PieMenuItem pi = items.get(i);
+            pi.setStartAngle(i * 360 / items.size());
+            pi.setOpenAngle(360 / items.size());
         }
-        return itemsLabel;
-    }
-    
-    public void setItems(String[] names){
-        double fillProportion = this.getFillProportion();
-        this.removeAll();
-        buttons.clear();
-        CurvedButtonText curvedButton;
-        double incrementalAngle = 360/names.length;
-        for (int i=0; i<names.length; i++){
-            curvedButton = new CurvedButtonText(names[i], Color.yellow, fillProportion, i*incrementalAngle, (i+1)*incrementalAngle);
-            buttons.add(curvedButton);
-            this.add(curvedButton, DEFAULT_LAYER);
-        }
-    }
-    
-    public double getFillProportion(){
-        return buttons.get(0).getFillProportion();
-    }
-    
-    public void setFillProportion(double prop){
-        double proportion = Math.max(0, Math.min(1, prop));
-        for (CurvedButtonText b: buttons){
-            b.setFillProportion(proportion);
-        }
+        
     }
     
     @Override
     public void setBounds(int x, int y, int width, int height) {
         super.setBounds(x, y, width, height);
-        for (CurvedButtonText b: buttons){
+        for (PieMenuItem b: items){
             b.setBounds(0, 0, width, height);
         }
     }
@@ -81,7 +54,7 @@ public class PopUpPieMenu extends JLayeredPane{
     public Dimension getPreferredSize() {
         int maxWidth = 0;
         int maxHeight = 0;
-        for (CurvedButtonText b: buttons){
+        for (PieMenuItem b: items){
             System.out.println(b.getPreferredSize().width);
             maxWidth = Math.max(maxWidth, b.getPreferredSize().width);
             maxHeight = Math.max(maxHeight, b.getPreferredSize().height);
@@ -89,4 +62,5 @@ public class PopUpPieMenu extends JLayeredPane{
         System.out.println(maxHeight);
         return new Dimension(maxWidth, maxHeight);
     }
+    
 }

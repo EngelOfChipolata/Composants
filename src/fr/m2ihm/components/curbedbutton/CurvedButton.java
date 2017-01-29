@@ -52,6 +52,7 @@ public class CurvedButton  extends JComponent{
     
     public final void setColor(Color c){
         this.color = c;
+        repaint();
     }
 
     public double getFillProportion() {
@@ -60,6 +61,7 @@ public class CurvedButton  extends JComponent{
 
     public void setFillProportion(double fillProportion) {
         this.fillProportion = Math.max(0, Math.min(1, fillProportion));
+        repaint();
     }
 
     public double getStartAngle() {
@@ -67,8 +69,9 @@ public class CurvedButton  extends JComponent{
     }
 
     public void setStartAngle(double startAngle) {
-        double angle = Math.min(360, Math.max(0, openAngle));
+        double angle = Math.min(360, Math.max(0, startAngle));
         this.startAngle = angle;
+        repaint();
     }
 
     public double getOpenAngle() {
@@ -78,6 +81,7 @@ public class CurvedButton  extends JComponent{
     public void setOpenAngle(double openAngle) {
         double angle = Math.min(360, Math.max(0, openAngle));
         this.openAngle = angle;
+        repaint();
     }
     
     public void addPropertyChangeListener(PropertyChangeListener li){
@@ -121,11 +125,10 @@ public class CurvedButton  extends JComponent{
         double internalB2 = Math.pow(this.getHeight() * fillProportion / 2, 2);
         double internalEllipse = Math.pow(x - this.getWidth()/2, 2) / internalA2 + Math.pow(y - this.getHeight()/2, 2) / internalB2;
         double angle = (Math.atan2(-y + this.getHeight() / 2, x - this.getWidth() / 2) * 180 / Math.PI + 360) % 360;
-        
         return ((bigEllipse <= 1)
                 && (internalEllipse > 1)
                 && angle >= startAngle
-                && angle <= (startAngle + openAngle) % 360);
+                && angle <= (startAngle + openAngle));
     }
     
         @Override
