@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fr.m2ihm.components.curbedbuttontext;
+package fr.m2ihm.components.piemenuitem;
 
 import fr.m2ihm.components.curbedbutton.CurvedButton;
 import java.awt.Color;
@@ -26,6 +26,12 @@ public class PieMenuItem extends JLayeredPane implements MouseListener{
     private CurvedButton button;
     private List<PieMenuItemListener> eventListeners;
     
+    public static final double DEFAULT_FINAL_PROPORTION = 0.5;
+    public static final double DEFAULT_START_ANGLE = 0;
+    public static final double DEFAULT_OPEN_ANGLE = 90;
+    public static final String DEFAULT_TEXT = "default";
+    public static final Color DEFAULT_COLOR = Color.PINK;
+    
     private enum State{
         IDLE,
         HOVERED
@@ -33,21 +39,19 @@ public class PieMenuItem extends JLayeredPane implements MouseListener{
     
     private State state;
     public PieMenuItem(){
-        this("default");
+        this(DEFAULT_TEXT);
     }
     
     public PieMenuItem(String text){
-        this(text, Color.PINK, 0.5, 0, 90);
+        this(text, DEFAULT_COLOR);
     }
     
-    public PieMenuItem(String text, Color color, double fillProportion, double startAngle, double openAngle){
-        button = new CurvedButton(color, fillProportion, startAngle, openAngle);
+    public PieMenuItem(String text, Color color){
+        button = new CurvedButton(color, DEFAULT_FINAL_PROPORTION, DEFAULT_START_ANGLE, DEFAULT_OPEN_ANGLE);
         label = new JLabel(text);
         
         label.setVerticalAlignment(JLabel.TOP);
         label.setHorizontalAlignment(JLabel.LEFT);
-        //label.setLocation((int)(getWidth() / 2 * (1 - fillProportion) * Math.sin(openAngle / 2 * Math.PI / 180)),
-        //        (int)(getHeight()/ 2 * (1 - fillProportion) * Math.cos(openAngle / 2 * Math.PI / 180)));
         
         this.add(button, DEFAULT_LAYER);
         this.add(label, PALETTE_LAYER);
@@ -55,7 +59,6 @@ public class PieMenuItem extends JLayeredPane implements MouseListener{
         state = State.IDLE;
         addMouseListener(this);
         eventListeners = new ArrayList<>();
-        //label.setLocation(150, 150);
     }
     
     public String getText(){
@@ -94,6 +97,15 @@ public class PieMenuItem extends JLayeredPane implements MouseListener{
         repaint();
     }
     
+    public void setColor(Color c){
+        button.setColor(c);
+        repaint();
+    }
+    
+    public Color getColor(){
+        return button.getColor();
+    }
+    
     public void addMouseListener(PieMenuItemListener li){
         eventListeners.add(li);
     }
@@ -105,8 +117,8 @@ public class PieMenuItem extends JLayeredPane implements MouseListener{
     @Override
     public void setBounds(int x, int y, int width, int height) {
         super.setBounds(x, y, width, height);
-        label.setBounds((int)(width/2 - 6*label.getText().length() / 2 + (width/2 * (1- getFillProportion()) + 10*label.getText().length() / 2) * Math.cos((getStartAngle() + getOpenAngle() / 2) * Math.PI / 180)),
-                (int)(height/2 - height/2 * (1-getFillProportion()/2) * Math.sin((getStartAngle() + getOpenAngle() / 2) * Math.PI / 180)), 8*label.getText().length(), height);
+        label.setBounds((int)(width/2 - 6*label.getText().length() / 2 + (width/4 * (1+getFillProportion())) * Math.cos((getStartAngle() + getOpenAngle() / 2) * Math.PI / 180)),
+                (int)(height/2 - height/4 * (1+getFillProportion()) * Math.sin((getStartAngle() + getOpenAngle() / 2) * Math.PI / 180)), 8*label.getText().length(), height);
         
         button.setBounds(0, 0, width, height);
     }

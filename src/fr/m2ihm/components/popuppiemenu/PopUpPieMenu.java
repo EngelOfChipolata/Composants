@@ -6,7 +6,7 @@
 package fr.m2ihm.components.popuppiemenu;
 
 import fr.m2ihm.components.curbedbutton.CurvedButton;
-import fr.m2ihm.components.curbedbuttontext.PieMenuItem;
+import fr.m2ihm.components.piemenuitem.PieMenuItem;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.MenuItem;
@@ -23,8 +23,17 @@ import javax.swing.JPopupMenu;
  */
 public class PopUpPieMenu extends JLayeredPane{
     List<PieMenuItem> items;
+    double fillProportion;
     
     public PopUpPieMenu(){
+        this(0.5);
+    }
+    
+    public PopUpPieMenu(double fillProportion){
+        if (fillProportion > 1 || fillProportion <=0){
+            throw new RuntimeException("Cannot create a pie menu with a fill > 1 or <= 0 !");
+        }
+        this.fillProportion = 1-fillProportion;
         items = new ArrayList<>();
     }
 
@@ -38,8 +47,14 @@ public class PopUpPieMenu extends JLayeredPane{
             PieMenuItem pi = items.get(i);
             pi.setStartAngle(i * 360 / items.size());
             pi.setOpenAngle(360 / items.size());
+            pi.setFillProportion(this.fillProportion);
         }
         
+    }
+    
+    public void remove(PieMenuItem item){
+        items.remove(item);
+        this.remove(item);
     }
     
     @Override
