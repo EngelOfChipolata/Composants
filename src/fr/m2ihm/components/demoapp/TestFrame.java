@@ -17,8 +17,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.Popup;
 import javax.swing.PopupFactory;
@@ -32,94 +35,105 @@ public class TestFrame extends javax.swing.JFrame {
     /**
      * Creates new form TestFrame
      */
-    Popup shapeLabelPopup;
+    PopUpPieMenu shapePieMenu;
+    PopUpPieMenu jlabelPieMenu;
+
+    Shape selectedShape;
+    JLabel selectedJLabel;
 
     public TestFrame() {
         initComponents();
 
         MouseListener popupListener = new PopupListener();
         addMouseListener(popupListener);
+        jPanel1.addMouseListener(popupListener);
         jLabel1.addMouseListener(popupListener);
         jLabel2.addMouseListener(popupListener);
         jLabel3.addMouseListener(popupListener);
         shape1.addMouseListener(popupListener);
         shape2.addMouseListener(popupListener);
         shape3.addMouseListener(popupListener);
+
+        shapePieMenu = new PopUpPieMenu(0.8);
+        PieMenuItem item1 = new PieMenuItem("Bleu", Color.BLUE);
+        item1.addMouseListener((event) -> {
+            selectedShape.setColor(Color.BLUE);
+            shapePieMenu.hidePopup();
+        });
+        shapePieMenu.add(item1);
+        PieMenuItem item2 = new PieMenuItem("Vert", Color.GREEN);
+        item2.addMouseListener((event) -> {
+            selectedShape.setColor(Color.GREEN);
+            shapePieMenu.hidePopup();
+        });
+        shapePieMenu.add(item2);
+        PieMenuItem item3 = new PieMenuItem("Rouge", Color.RED);
+        item3.addMouseListener((event) -> {
+            selectedShape.setColor(Color.RED);
+            shapePieMenu.hidePopup();
+        });
+        shapePieMenu.add(item3);
+        PieMenuItem item4 = new PieMenuItem("Jaune", Color.YELLOW);
+        item4.addMouseListener((event) -> {
+            selectedShape.setColor(Color.YELLOW);
+            shapePieMenu.hidePopup();
+        });
+        shapePieMenu.add(item4);
+
+        jlabelPieMenu = new PopUpPieMenu(0.8);
+        PieMenuItem item5 = new PieMenuItem("\"Coucou\"");
+        item5.addMouseListener((event) -> {
+            selectedJLabel.setText("Bonjour");
+            jlabelPieMenu.hidePopup();
+        });
+        jlabelPieMenu.add(item5);
+        PieMenuItem item6 = new PieMenuItem("\"M2IHM\"");
+        item6.addMouseListener((event) -> {
+            selectedJLabel.setText("M2IHM FTW !");
+            jlabelPieMenu.hidePopup();
+        });
+        jlabelPieMenu.add(item6);
+        PieMenuItem item7 = new PieMenuItem("\"Nicolas\"");
+        item7.addMouseListener((event) -> {
+            selectedJLabel.setText("Nicolas Dzieciol");
+            jlabelPieMenu.hidePopup();
+        });
+        jlabelPieMenu.add(item7);
+        PieMenuItem item8 = new PieMenuItem("\"Guilhem\"");
+        item8.addMouseListener((event) -> {
+            selectedJLabel.setText("Guilhem Buisan");
+            jlabelPieMenu.hidePopup();
+        });
+        jlabelPieMenu.add(item8);
+        PieMenuItem item9 = new PieMenuItem("\"Tarte Menu\"");
+        item9.addMouseListener((event) -> {
+            selectedJLabel.setText("Miam");
+            jlabelPieMenu.hidePopup();
+        });
+        jlabelPieMenu.add(item9);
+
     }
 
     class PopupListener extends MouseAdapter {
 
         @Override
         public void mouseClicked(MouseEvent e) {
-            if (shapeLabelPopup != null) {
-                shapeLabelPopup.hide();
+            if (shapePieMenu.isShowing()) {
+                shapePieMenu.hidePopup();
+            }
+            if (jlabelPieMenu.isShowing()) {
+                jlabelPieMenu.hidePopup();
             }
             if (e.getButton() == MouseEvent.BUTTON3) {
 
                 if (e.getSource() instanceof Shape) {
-                    Shape source = (Shape) e.getSource();
-                    PopUpPieMenu shapeLabelPieMenu = new PopUpPieMenu(0.8);
-                    PieMenuItem item1 = new PieMenuItem("Bleu", Color.BLUE);
-                    item1.addMouseListener((event) -> {
-                        source.setColor(Color.BLUE);
-                        shapeLabelPopup.hide();
-                    });
-                    shapeLabelPieMenu.add(item1);
-                    PieMenuItem item2 = new PieMenuItem("Vert", Color.GREEN);
-                    item2.addMouseListener((event) -> {
-                        source.setColor(Color.GREEN);
-                        shapeLabelPopup.hide();
-                    });
-                    shapeLabelPieMenu.add(item2);
-                    PieMenuItem item3 = new PieMenuItem("Rouge", Color.RED);
-                    item3.addMouseListener((event) -> {
-                        source.setColor(Color.RED);
-                        shapeLabelPopup.hide();
-                    });
-                    shapeLabelPieMenu.add(item3);
-                    PieMenuItem item4 = new PieMenuItem("Jaune", Color.YELLOW);
-                    item4.addMouseListener((event) -> {
-                        source.setColor(Color.YELLOW);
-                        shapeLabelPopup.hide();
-                    });
-                    shapeLabelPieMenu.add(item4);
-                    shapeLabelPopup = PopupFactory.getSharedInstance().getPopup(e.getComponent(), shapeLabelPieMenu, e.getXOnScreen() - shapeLabelPieMenu.getPreferredSize().width / 2, e.getYOnScreen() - shapeLabelPieMenu.getPreferredSize().height / 2);
-                    shapeLabelPopup.show();
-                }else if (e.getSource() instanceof JLabel){
-                    JLabel source = (JLabel) e.getSource();
-                    PopUpPieMenu shapeLabelPieMenu = new PopUpPieMenu(0.8);
-                    PieMenuItem item1 = new PieMenuItem("\"Coucou\"");
-                    item1.addMouseListener((event) -> {
-                        source.setText("Bonjour");
-                        shapeLabelPopup.hide();
-                    });
-                    shapeLabelPieMenu.add(item1);
-                    PieMenuItem item2 = new PieMenuItem("\"M2IHM\"");
-                    item2.addMouseListener((event) -> {
-                        source.setText("M2IHM FTW !");
-                        shapeLabelPopup.hide();
-                    });
-                    shapeLabelPieMenu.add(item2);
-                    PieMenuItem item3 = new PieMenuItem("\"Nicolas\"");
-                    item3.addMouseListener((event) -> {
-                        source.setText("Nicolas Dzieciol");
-                        shapeLabelPopup.hide();
-                    });
-                    shapeLabelPieMenu.add(item3);
-                    PieMenuItem item4 = new PieMenuItem("\"Guilhem\"");
-                    item4.addMouseListener((event) -> {
-                        source.setText("Guilhem Buisan");
-                        shapeLabelPopup.hide();
-                    });
-                    shapeLabelPieMenu.add(item4);
-                    PieMenuItem item5 = new PieMenuItem("\"Tarte Menu\"");
-                    item5.addMouseListener((event) -> {
-                        source.setText("Miam");
-                        shapeLabelPopup.hide();
-                    });
-                    shapeLabelPieMenu.add(item5);
-                    shapeLabelPopup = PopupFactory.getSharedInstance().getPopup(e.getComponent(), shapeLabelPieMenu, e.getXOnScreen() - shapeLabelPieMenu.getPreferredSize().width / 2, e.getYOnScreen() - shapeLabelPieMenu.getPreferredSize().height / 2);
-                    shapeLabelPopup.show();
+                    selectedShape = (Shape) (e.getSource());
+                    selectedJLabel = null;
+                    shapePieMenu.showPopup(selectedShape, e.getXOnScreen(), e.getYOnScreen());
+                } else if (e.getSource() instanceof JLabel) {
+                    selectedShape = null;
+                    selectedJLabel = (JLabel)(e.getSource());
+                    jlabelPieMenu.showPopup(selectedJLabel, e.getXOnScreen(), e.getYOnScreen());
                 }
             }
         }
@@ -134,6 +148,7 @@ public class TestFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -154,50 +169,64 @@ public class TestFrame extends javax.swing.JFrame {
 
         jLabel3.setText("jLabel3");
 
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 3772, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGap(146, 146, 146)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(shape2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(shape1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGap(70, 70, 70)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(jLabel3)
+                            .addGap(93, 93, 93)
+                            .addComponent(shape3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jLabel1)
+                        .addComponent(jLabel2))
+                    .addContainerGap(3214, Short.MAX_VALUE)))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 678, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGap(87, 87, 87)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addGap(48, 48, 48)
+                                    .addComponent(shape2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jLabel1))
+                            .addGap(14, 14, 14)
+                            .addComponent(jLabel3)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addGap(47, 47, 47)
+                                    .addComponent(jLabel2))
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addGap(19, 19, 19)
+                                    .addComponent(shape1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGap(42, 42, 42)
+                            .addComponent(shape3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addContainerGap(353, Short.MAX_VALUE)))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(51, 51, 51)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(shape2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(shape1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(70, 70, 70)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addGap(93, 93, 93)
-                        .addComponent(shape3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2))
-                .addContainerGap(3309, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(42, 42, 42)
-                                .addComponent(shape2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(58, 58, 58)
-                                .addComponent(jLabel1)))
-                        .addGap(14, 14, 14)
-                        .addComponent(jLabel3)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(47, 47, 47)
-                                .addComponent(jLabel2))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(19, 19, 19)
-                                .addComponent(shape1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(100, 100, 100)
-                        .addComponent(shape3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(446, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -247,6 +276,7 @@ public class TestFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JPanel jPanel1;
     private fr.ups.m2ihm.bean.shape.Shape shape1;
     private fr.ups.m2ihm.bean.shape.Shape shape2;
     private fr.ups.m2ihm.bean.shape.Shape shape3;

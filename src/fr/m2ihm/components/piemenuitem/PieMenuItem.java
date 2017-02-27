@@ -135,6 +135,8 @@ public class PieMenuItem extends JLayeredPane implements MouseListener{
             case HOVERED:
                 for (PieMenuItemListener li : eventListeners){
                     li.pieMenuItemClicked(new PieMenuItemEvent(this));
+                    this.button.setColor(this.button.getColor().brighter());
+                    state = State.IDLE;
                 }
             break;
         }

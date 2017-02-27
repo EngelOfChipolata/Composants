@@ -5,25 +5,30 @@
  */
 package fr.m2ihm.components.popuppiemenu;
 
-import fr.m2ihm.components.curbedbutton.CurvedButton;
 import fr.m2ihm.components.piemenuitem.PieMenuItem;
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.MenuItem;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.JLayeredPane;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
+import javax.swing.Popup;
+import javax.swing.PopupFactory;
 
 /**
  *
  * @author buisangu
  */
 public class PopUpPieMenu extends JLayeredPane{
-    List<PieMenuItem> items;
-    double fillProportion;
+    
+    private enum State{
+        HIDING,
+        SHOWING
+    }
+    
+    private State state;
+    private List<PieMenuItem> items;
+    private double fillProportion;
+    private Popup popup;
     
     public PopUpPieMenu(){
         this(0.5);
@@ -35,6 +40,8 @@ public class PopUpPieMenu extends JLayeredPane{
         }
         this.fillProportion = 1-fillProportion;
         items = new ArrayList<>();
+        state = State.HIDING;
+        popup = null;
     }
 
     public void add(PieMenuItem item){
@@ -57,6 +64,49 @@ public class PopUpPieMenu extends JLayeredPane{
         this.remove(item);
     }
     
+    public List<PieMenuItem> getMenuItems(){
+        return items;
+    }
+    
+    public void showPopup(JComponent parent, int x, int y){
+        switch (state){
+            case HIDING:
+                popup = PopupFactory.getSharedInstance().getPopup(parent, this, x - getPreferredSize().width / 2, y - getPreferredSize().height / 2);
+                popup.show();
+                state = State.SHOWING;
+                break;
+            case SHOWING:
+                popup.hide();
+                popup = null;
+                popup = PopupFactory.getSharedInstance().getPopup(parent, this, x - getPreferredSize().width / 2, y - getPreferredSize().height / 2);
+                popup.show();
+                state = State.SHOWING;
+                break;
+            default:
+                throw new AssertionError(state.name());
+            
+        }        
+    }
+    
+    public void hidePopup(){
+        switch(state){
+            case HIDING:
+                //Rien
+                break;
+            case SHOWING:
+                popup.hide();
+                state = State.HIDING;
+                break;
+            default:
+                throw new AssertionError(state.name());
+            
+        }
+    }
+    
+    public boolean isShowing(){
+        return (state == State.SHOWING);
+    }
+    
     @Override
     public void setBounds(int x, int y, int width, int height) {
         super.setBounds(x, y, width, height);
@@ -70,11 +120,9 @@ public class PopUpPieMenu extends JLayeredPane{
         int maxWidth = 0;
         int maxHeight = 0;
         for (PieMenuItem b: items){
-            System.out.println(b.getPreferredSize().width);
             maxWidth = Math.max(maxWidth, b.getPreferredSize().width);
             maxHeight = Math.max(maxHeight, b.getPreferredSize().height);
         }
-        System.out.println(maxHeight);
         return new Dimension(maxWidth, maxHeight);
     }
     
